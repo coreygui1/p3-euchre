@@ -77,20 +77,20 @@ class Card {
 public:
 
   //EFFECTS Initializes Card to the Two of Spades
-  Card();
+  Card(); // finished
 
   //EFFECTS Initializes Card to specified rank and suit
-  Card(Rank rank_in, Suit suit_in);
+  Card(Rank rank_in, Suit suit_in); // finished
 
   //EFFECTS Returns the rank
-  Rank get_rank() const;
+  Rank get_rank() const; //finished
 
   //EFFECTS Returns the suit.  Does not consider trump.
-  Suit get_suit() const;
+  Suit get_suit() const; // finished
 
   //EFFECTS Returns the suit
   //HINT: the left bower is the trump suit!
-  Suit get_suit(Suit trump) const;
+  Suit get_suit(Suit trump) const; // finished
 
   //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
   bool is_face_or_ace() const;

@@ -93,6 +93,59 @@ std::istream & operator>>(std::istream &is, Suit &suit) {
 
 /////////////// Write your implementation for Card below ///////////////
 
+//EFFECTS Initializes Card to the Two of Spades
+Card::Card(): rank(TWO), suit(SPADES){}
+
+//EFFECTS Initializes Card to specified rank and suit
+Card::Card(Rank rank_in, Suit suit_in): rank(rank_in), suit(suit_in){}
+
+//EFFECTS Returns the rank
+Rank Card::get_rank() const{
+    return rank;
+}
+
+//EFFECTS Returns the suit
+Suit Card::get_suit() const{
+  return suit;
+}
+
+//EFFECTS Returns the suit
+  //HINT: the left bower is the trump suit!
+  Suit Card::get_suit(Suit trump) const{
+    if (rank == JACK){
+      if((trump == SPADES && suit == CLUBS) || (trump == CLUBS && suit == SPADES) 
+          || (trump == DIAMONDS && suit == HEARTS) || (trump == HEARTS && suit == DIAMONDS) ){
+        return trump;
+      }
+    }
+    return suit;
+  }
+
+  //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
+  bool Card::is_face_or_ace() const{
+    if (rank == JACK|| rank == QUEEN|| rank == KING|| rank == ACE){
+      return true;
+    }
+    return false;
+  }
+
+  //EFFECTS Returns true if card is the Jack of the trump suit
+  bool Card::is_right_bower(Suit trump) const{
+    if(suit == trump && rank == JACK){
+      return true;
+    }
+    return false;
+  }
+
+  //EFFECTS Returns true if card is the Jack of the next suit
+  bool Card::is_left_bower(Suit trump) const{
+    if(suit != trump && this->get_suit(trump) == trump && rank == JACK){
+      return true;
+    }
+    return false; 
+  }
+
+
 
 // NOTE: We HIGHLY recommend you check out the operator overloading
 // tutorial in the project spec before implementing
