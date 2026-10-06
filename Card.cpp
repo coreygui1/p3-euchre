@@ -3,7 +3,7 @@
 #include <array>
 #include "Card.hpp"
 
-using namespace std;
+
 
 /////////////// Rank operator implementations - DO NOT CHANGE ///////////////
 
@@ -44,7 +44,7 @@ std::ostream & operator<<(std::ostream &os, Rank rank) {
 //REQUIRES If any input is read, it must be a valid rank
 //EFFECTS Reads a Rank from a stream, for example "Two" -> TWO
 std::istream & operator>>(std::istream &is, Rank &rank) {
-  string str;
+  std::string str;
   if(is >> str) {
     rank = string_to_rank(str);
   }
@@ -83,7 +83,7 @@ std::ostream & operator<<(std::ostream &os, Suit suit) {
 //REQUIRES If any input is read, it must be a valid suit
 //EFFECTS Reads a Suit from a stream, for example "Spades" -> SPADES
 std::istream & operator>>(std::istream &is, Suit &suit) {
-  string str;
+  std::string str;
   if (is >> str) {
     suit = string_to_suit(str);
   }
@@ -140,6 +140,15 @@ Suit Card::get_suit() const{
   //EFFECTS Returns true if card is the Jack of the next suit
   bool Card::is_left_bower(Suit trump) const{
     if(suit != trump && this->get_suit(trump) == trump && rank == JACK){
+      return true;
+    }
+    return false; 
+  }
+
+  //EFFECTS Returns true if the card is a trump card.  All cards of the trump
+  // suit are trump cards.  The left bower is also a trump card.
+  bool Card::is_trump(Suit trump) const{
+    if(this->get_suit(trump) == trump){
       return true;
     }
     return false; 
