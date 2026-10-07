@@ -14,3 +14,8 @@ TEST(test_card_ctor) {
 // Add more test cases here
 
 TEST_MAIN()
+
+TEST(test_ctor2){
+    Card c;
+    ASSERT_EQUAL()
+}
