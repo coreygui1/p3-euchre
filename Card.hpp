@@ -77,33 +77,33 @@ class Card {
 public:
 
   //EFFECTS Initializes Card to the Two of Spades
-  Card(); // finished
+  Card(); // finished checked
 
   //EFFECTS Initializes Card to specified rank and suit
-  Card(Rank rank_in, Suit suit_in); // finished
+  Card(Rank rank_in, Suit suit_in); // finished checked
 
   //EFFECTS Returns the rank
-  Rank get_rank() const; //finished
+  Rank get_rank() const; //finished checked
 
   //EFFECTS Returns the suit.  Does not consider trump.
-  Suit get_suit() const; // finished
+  Suit get_suit() const; // finished checked
 
   //EFFECTS Returns the suit
   //HINT: the left bower is the trump suit!
-  Suit get_suit(Suit trump) const; // finished
+  Suit get_suit(Suit trump) const; // finished checked
 
   //EFFECTS Returns true if card is a face card (Jack, Queen, King or Ace)
-  bool is_face_or_ace() const; // finished
+  bool is_face_or_ace() const; // finished checked
 
   //EFFECTS Returns true if card is the Jack of the trump suit
-  bool is_right_bower(Suit trump) const; // finished
+  bool is_right_bower(Suit trump) const; // finished checked
 
   //EFFECTS Returns true if card is the Jack of the next suit
-  bool is_left_bower(Suit trump) const; // finished
+  bool is_left_bower(Suit trump) const; // finished checked
 
   //EFFECTS Returns true if the card is a trump card.  All cards of the trump
   // suit are trump cards.  The left bower is also a trump card.
-  bool is_trump(Suit trump) const; // finished
+  bool is_trump(Suit trump) const; // finished checked
 
 private:
   Rank rank;
@@ -115,39 +115,39 @@ private:
 };
 
 //EFFECTS Prints Card to stream, for example "Two of Spades"
-std::ostream & operator<<(std::ostream &os, const Card &card); // finished
+std::ostream & operator<<(std::ostream &os, const Card &card); // finished CHECKED
 
 //EFFECTS Reads a Card from a stream in the format "Two of Spades"
 //NOTE The Card class declares this operator>> "friend" function,
 //     which means it is allowed to access card.rank and card.suit.
-std::istream & operator>>(std::istream &is, Card &card); // finished
+std::istream & operator>>(std::istream &is, Card &card); // finished CHECKED
 
 //EFFECTS Returns true if lhs is lower value than rhs.
 //  Does not consider trump.
-bool operator<(const Card &lhs, const Card &rhs); // finished
+bool operator<(const Card &lhs, const Card &rhs); // finished CHECKED
 
 //EFFECTS Returns true if lhs is lower value than rhs or the same card as rhs.
 //  Does not consider trump.
-bool operator<=(const Card &lhs, const Card &rhs); // finished
+bool operator<=(const Card &lhs, const Card &rhs); // finished CHECKED
 
 //EFFECTS Returns true if lhs is higher value than rhs.
 //  Does not consider trump.
-bool operator>(const Card &lhs, const Card &rhs); // finished
+bool operator>(const Card &lhs, const Card &rhs); // finished CHECKED
 
 //EFFECTS Returns true if lhs is higher value than rhs or the same card as rhs.
 //  Does not consider trump.
-bool operator>=(const Card &lhs, const Card &rhs); // finished
+bool operator>=(const Card &lhs, const Card &rhs); // finished CHECKED
 
 //EFFECTS Returns true if lhs is same card as rhs.
 //  Does not consider trump.
-bool operator==(const Card &lhs, const Card &rhs); // finished
+bool operator==(const Card &lhs, const Card &rhs); // finished CHECKED
 
 //EFFECTS Returns true if lhs is not the same card as rhs.
 //  Does not consider trump.
-bool operator!=(const Card &lhs, const Card &rhs); // finished
+bool operator!=(const Card &lhs, const Card &rhs); // finished CHECKED
 
 //EFFECTS returns the next suit, which is the suit of the same color
-Suit Suit_next(Suit suit); // finished
+Suit Suit_next(Suit suit); // finished CHECKED
 
 //EFFECTS Returns true if a is lower value than b.  Uses trump to determine
 // order, as described in the spec.

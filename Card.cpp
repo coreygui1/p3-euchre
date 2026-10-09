@@ -100,7 +100,7 @@ Card::Card(): rank(TWO), suit(SPADES){}
 Card::Card(Rank rank_in, Suit suit_in): rank(rank_in), suit(suit_in){}
 
 //EFFECTS Returns the rank
-Rank Card::get_rank() const{
+Rank Card::get_rank() const{ 
     return rank;
 }
 
