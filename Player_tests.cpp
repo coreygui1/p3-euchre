@@ -175,11 +175,12 @@ TEST(test_add_and_discard) {
 
     alice->add_and_discard(Card(JACK, HEARTS));
 
-    Card first = alice->lead_card(HEARTS);
-    Card second = alice->lead_card(HEARTS);
-
-    ASSERT_EQUAL(Card(ACE, CLUBS), first);
-    ASSERT_EQUAL(Card(KING, CLUBS), second);
+    // Verify all five cards, not just the first two.
+    ASSERT_EQUAL(Card(ACE, CLUBS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(KING, CLUBS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(QUEEN, CLUBS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(TEN, CLUBS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(JACK, HEARTS), alice->lead_card(HEARTS));
 
     delete alice;
 }
@@ -195,8 +196,12 @@ TEST(test_discard_upcard) {
 
     alice->add_and_discard(Card(NINE, HEARTS));
 
-    Card first = alice->lead_card(HEARTS);
-    ASSERT_EQUAL(Card(JACK, HEARTS), first);
+    // The Nine upcard should be discarded, not the Ten in hand.
+    ASSERT_EQUAL(Card(JACK, HEARTS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(ACE, HEARTS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(KING, HEARTS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(QUEEN, HEARTS), alice->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(TEN, HEARTS), alice->lead_card(HEARTS));
 
     delete alice;
 }
@@ -280,6 +285,176 @@ TEST(test_play_left_bower) {
     ASSERT_EQUAL(Card(NINE, DIAMONDS), played);
 
     delete alice;
+}
+
+TEST(test_add_discard_keep_upcard_all_trump) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(TEN, HEARTS));
+    p->add_card(Card(QUEEN, HEARTS));
+    p->add_card(Card(ACE, HEARTS));
+    p->add_card(Card(JACK, DIAMONDS));
+    p->add_and_discard(Card(KING, HEARTS));
+
+    ASSERT_EQUAL(Card(JACK, DIAMONDS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(ACE, HEARTS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(KING, HEARTS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(QUEEN, HEARTS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(TEN, HEARTS), p->lead_card(HEARTS));
+    delete p;
+}
+
+TEST(test_add_discard_nine_trump_beats_ten_nontrump) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(JACK, DIAMONDS));
+    p->add_card(Card(ACE, SPADES));
+    p->add_card(Card(QUEEN, CLUBS));
+    p->add_card(Card(TEN, DIAMONDS));
+    p->add_and_discard(Card(JACK, HEARTS));
+
+    ASSERT_EQUAL(Card(ACE, SPADES), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(QUEEN, CLUBS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(JACK, HEARTS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(JACK, DIAMONDS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(NINE, HEARTS), p->lead_card(HEARTS));
+    delete p;
+}
+
+TEST(test_add_discard_left_bower_preserved) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(JACK, DIAMONDS));
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(ACE, SPADES));
+    p->add_card(Card(KING, CLUBS));
+    p->add_card(Card(TEN, SPADES));
+    p->add_and_discard(Card(QUEEN, HEARTS));
+
+    ASSERT_EQUAL(Card(ACE, SPADES), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(KING, CLUBS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(JACK, DIAMONDS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(QUEEN, HEARTS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(NINE, HEARTS), p->lead_card(HEARTS));
+    delete p;
+}
+
+TEST(test_add_discard_equal_rank_nontrumps) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(NINE, SPADES));
+    p->add_card(Card(NINE, DIAMONDS));
+    p->add_card(Card(TEN, SPADES));
+    p->add_card(Card(TEN, DIAMONDS));
+    p->add_card(Card(NINE, CLUBS));
+    p->add_and_discard(Card(ACE, HEARTS));
+
+    ASSERT_EQUAL(Card(TEN, DIAMONDS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(TEN, SPADES), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(NINE, DIAMONDS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(NINE, CLUBS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(ACE, HEARTS), p->lead_card(HEARTS));
+    delete p;
+}
+
+TEST(test_add_discard_lowest_at_middle) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(ACE, CLUBS));
+    p->add_card(Card(KING, SPADES));
+    p->add_card(Card(NINE, DIAMONDS));
+    p->add_card(Card(QUEEN, CLUBS));
+    p->add_card(Card(TEN, SPADES));
+    p->add_and_discard(Card(NINE, HEARTS));
+
+    ASSERT_EQUAL(Card(ACE, CLUBS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(KING, SPADES), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(QUEEN, CLUBS), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(TEN, SPADES), p->lead_card(HEARTS));
+    ASSERT_EQUAL(Card(NINE, HEARTS), p->lead_card(HEARTS));
+    delete p;
+}
+
+TEST(test_make_trump_round1_low_trump_not_enough) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(TEN, HEARTS));
+    p->add_card(Card(ACE, SPADES));
+    p->add_card(Card(KING, CLUBS));
+    p->add_card(Card(QUEEN, DIAMONDS));
+    Suit selected = CLUBS;
+    ASSERT_FALSE(p->make_trump(Card(JACK, HEARTS), false, 1, selected));
+    ASSERT_EQUAL(CLUBS, selected);
+    delete p;
+}
+
+TEST(test_make_trump_round2_left_bower_yes) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(JACK, HEARTS));
+    p->add_card(Card(NINE, SPADES));
+    p->add_card(Card(TEN, SPADES));
+    p->add_card(Card(NINE, CLUBS));
+    p->add_card(Card(TEN, CLUBS));
+    Suit selected = SPADES;
+    ASSERT_TRUE(p->make_trump(Card(ACE, HEARTS), false, 2, selected));
+    ASSERT_EQUAL(DIAMONDS, selected);
+    delete p;
+}
+
+TEST(test_lead_excludes_left_bower_from_nontrumps) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(JACK, DIAMONDS));
+    p->add_card(Card(NINE, SPADES));
+    p->add_card(Card(TEN, SPADES));
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(QUEEN, HEARTS));
+    ASSERT_EQUAL(Card(TEN, SPADES), p->lead_card(HEARTS));
+    delete p;
+}
+
+TEST(test_play_follow_trump_with_left_bower) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(JACK, HEARTS));
+    p->add_card(Card(ACE, CLUBS));
+    p->add_card(Card(NINE, CLUBS));
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(KING, SPADES));
+    ASSERT_EQUAL(Card(JACK, HEARTS),
+                 p->play_card(Card(NINE, DIAMONDS), DIAMONDS));
+    delete p;
+}
+
+TEST(test_play_left_bower_does_not_follow_printed_suit) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(JACK, HEARTS));
+    p->add_card(Card(NINE, SPADES));
+    p->add_card(Card(TEN, SPADES));
+    p->add_card(Card(ACE, CLUBS));
+    p->add_card(Card(NINE, DIAMONDS));
+    ASSERT_EQUAL(Card(NINE, SPADES),
+                 p->play_card(Card(QUEEN, HEARTS), DIAMONDS));
+    delete p;
+}
+
+TEST(test_play_cannot_follow_discard_low_nontrump) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(TEN, HEARTS));
+    p->add_card(Card(ACE, SPADES));
+    p->add_card(Card(NINE, CLUBS));
+    p->add_card(Card(TEN, CLUBS));
+    ASSERT_EQUAL(Card(NINE, CLUBS),
+                 p->play_card(Card(QUEEN, DIAMONDS), HEARTS));
+    delete p;
+}
+
+TEST(test_play_cannot_follow_all_trump) {
+    Player *p = Player_factory("Alice", "Simple");
+    p->add_card(Card(NINE, HEARTS));
+    p->add_card(Card(TEN, HEARTS));
+    p->add_card(Card(JACK, DIAMONDS));
+    p->add_card(Card(QUEEN, HEARTS));
+    p->add_card(Card(KING, HEARTS));
+    ASSERT_EQUAL(Card(NINE, HEARTS),
+                 p->play_card(Card(ACE, CLUBS), HEARTS));
+    delete p;
 }
 
 TEST_MAIN()
