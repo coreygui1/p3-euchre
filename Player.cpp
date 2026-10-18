@@ -24,6 +24,7 @@ public:
     hand.push_back(c);
   }
 
+  // upcard is the card being considered for trump, order_up_suit is the new trump suit if it is trump
   bool make_trump(const Card &upcard, bool is_dealer, int round, Suit &order_up_suit) const override {
     if (round == 1) {
       Suit proposed_suit = upcard.get_suit();
@@ -158,7 +159,7 @@ public:
                   int round, Suit &order_up_suit) const override {
     print_hand();
     cout << "Human player " << name
-         << ", enter a suit, or \"pass\":\n";
+         << ", please enter a suit, or \"pass\":\n";
 
     string choice;
     cin >> choice;
@@ -173,7 +174,7 @@ public:
     print_hand();
     cout << "Discard upcard: [-1]\n";
     cout << "Human player " << name
-         << ", select a card to discard:\n";
+         << ", please select a card to discard:\n";
 
     int choice;
     cin >> choice;
@@ -186,7 +187,7 @@ public:
   Card lead_card(Suit trump) override {
     print_hand();
     cout << "Human player " << name
-         << ", select a card:\n";
+         << ", please select a card:\n";
 
     int choice;
     cin >> choice;
